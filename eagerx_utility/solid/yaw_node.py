@@ -11,6 +11,7 @@ try:
 except ImportError:
     raise ImportError("Please install scipy")
 
+
 class WrappedYawSensor(eagerx.EngineNode):
     @classmethod
     def make(

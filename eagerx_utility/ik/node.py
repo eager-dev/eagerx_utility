@@ -12,6 +12,7 @@ try:
 except ImportError:
     raise ImportError("Please install scipy and modern_robotics")
 
+
 class EndEffectorDownward(eagerx.Node):
     @classmethod
     def make(

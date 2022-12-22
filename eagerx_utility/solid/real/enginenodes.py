@@ -12,6 +12,7 @@ try:
 except ImportError:
     raise ImportError("Please install scipy")
 
+
 class GoalObservationSensor(eagerx.EngineNode):
     @classmethod
     def make(

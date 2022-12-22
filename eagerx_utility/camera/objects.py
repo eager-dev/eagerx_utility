@@ -16,30 +16,29 @@ class Camera(eagerx.Object):
     )
     @register.engine_states(
         pos=Space(low=[0.83, 0.0181, 0.75], high=[0.83, 0.0181, 0.75], shape=(3,), dtype="float32"),
-        orientation=Space(low=[0.377, -0.04, -0.92, 0.088], high=[0.377, -0.04, -0.92, 0.088], shape=(4,),
-                          dtype="float32"),
+        orientation=Space(low=[0.377, -0.04, -0.92, 0.088], high=[0.377, -0.04, -0.92, 0.088], shape=(4,), dtype="float32"),
     )
     def make(
-            cls,
-            name: str,
-            sensors=None,
-            states=None,
-            rate=30,
-            base_pos=None,
-            base_or=None,
-            self_collision=True,
-            fixed_base=True,
-            render_shape=None,
-            urdf: str = None,
-            optical_link: str = None,
-            calibration_link: str = None,
-            camera_index: int = 0,
-            mode: str = "bgr",
-            fov: float = 45.0,
-            near_val: float = 0.1,
-            far_val: float = 10.0,
-            light_direction_low=None,
-            light_direction_high=None,
+        cls,
+        name: str,
+        sensors=None,
+        states=None,
+        rate=30,
+        base_pos=None,
+        base_or=None,
+        self_collision=True,
+        fixed_base=True,
+        render_shape=None,
+        urdf: str = None,
+        optical_link: str = None,
+        calibration_link: str = None,
+        camera_index: int = 0,
+        mode: str = "bgr",
+        fov: float = 45.0,
+        near_val: float = 0.1,
+        far_val: float = 10.0,
+        light_direction_low=None,
+        light_direction_high=None,
     ) -> ObjectSpec:
         """Make a spec to initialize a camera.
 
@@ -105,7 +104,6 @@ class Camera(eagerx.Object):
 try:
     from eagerx_pybullet.engine import PybulletEngine
 
-
     @register.engine(PybulletEngine, entity=Camera)
     def pybullet_engine(spec: ObjectSpec, graph: EngineGraph):
         """Engine-specific implementation (Pybullet) of the object."""
@@ -131,8 +129,7 @@ try:
         from eagerx_pybullet.enginenodes import LinkSensor
         from eagerx_utility.camera.pybullet.enginenodes import CameraSensor
 
-        pos = LinkSensor.make("pos", rate=spec.sensors.pos.rate, process=2, mode="position",
-                              links=[spec.config.optical_link])
+        pos = LinkSensor.make("pos", rate=spec.sensors.pos.rate, process=2, mode="position", links=[spec.config.optical_link])
         orientation = LinkSensor.make(
             "orientation",
             rate=spec.sensors.orientation.rate,
@@ -165,12 +162,12 @@ try:
         graph.connect(source=image.outputs.image, sensor="image")
         graph.connect(source=pos.outputs.obs, target=image.inputs.pos)
         graph.connect(source=orientation.outputs.obs, target=image.inputs.orientation)
+
 except ImportError:
     print("eagerx_pybullet not installed, pybullet implementation not available.")
 
 try:
     from eagerx_reality.engine import RealEngine
-
 
     @register.engine(RealEngine, entity=Camera)
     def real_engine(spec: ObjectSpec, graph: EngineGraph):
@@ -193,5 +190,6 @@ try:
         )
         graph.add([image])
         graph.connect(source=image.outputs.image, sensor="image")
+
 except ImportError:
     print("eagerx_reality not installed, real implementation not available.")

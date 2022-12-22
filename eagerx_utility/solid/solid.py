@@ -121,12 +121,13 @@ try:
         graph.connect(source=orientation.outputs.obs, target=yaw.inputs.orientation)
         graph.connect(source=yaw.outputs.yaw, sensor="yaw")
         graph.connect(source=robot_view.outputs.image, sensor="robot_view")
+
 except ImportError:
     print("eagerx_pybullet not installed, skipping PybulletEngine")
 
 try:
     from eagerx_reality import RealEngine
-    
+
     @register.engine(RealEngine)
     def real_engine(spec: ObjectSpec, graph: EngineGraph):
         """Engine-specific implementation (Reality) of the object."""
@@ -178,5 +179,6 @@ try:
         graph.connect(aruco.outputs.orientation, target=yaw.inputs.orientation)
         graph.connect(yaw.outputs.yaw, sensor="yaw")
         graph.connect(aruco.outputs.image_aruco, sensor="robot_view")
+
 except ImportError:
     print("eagerx_reality not installed. Skipping RealEngine.")

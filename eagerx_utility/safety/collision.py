@@ -4,6 +4,7 @@
 
 from dataclasses import dataclass
 import numpy as np
+
 try:
     import pybullet as pyb
 except ImportError:
