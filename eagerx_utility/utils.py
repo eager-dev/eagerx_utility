@@ -1,5 +1,3 @@
-import os
-import yaml
 from eagerx.utils.utils_sub import substitute_args
 
 
@@ -81,42 +79,3 @@ def launch_node(launch_file, args):
     # roslaunch.configure_logging(uuid)  # THIS RESETS the log level. Can we do without this line? Are ROS logs stil being made?
     launch = roslaunch.parent.ROSLaunchParent(uuid, roslaunch_file)
     return launch
-
-
-def get_configs(robot_model: str, motor_config: str, mode_config: str):
-    import rospy
-
-    module_path = os.path.dirname(eagerx_interbotix.__file__) + "/../assets/"
-    config_path = module_path + "config/"
-    try:
-        mode_config = mode_config if isinstance(mode_config, str) else f"{config_path}/modes.yaml"
-        with open(mode_config, "r") as yamlfile:
-            mode_config = yaml.safe_load(yamlfile)
-    except IOError:
-        rospy.logerr(f"Mode Config File was not found in: {config_path}")
-        raise
-
-    try:
-        motor_config = motor_config if isinstance(motor_config, str) else f"{config_path}/{robot_model}.yaml"
-        with open(motor_config, "r") as yamlfile:
-            motor_config = yaml.safe_load(yamlfile)
-    except IOError:
-        rospy.logerr(f"Motor Config File was not found in: {config_path}")
-        raise
-    return motor_config, mode_config
-
-
-class XmlListConfig(list):
-    def __init__(self, aList):
-        for element in aList:
-            if element:
-                # treat like dict
-                if len(element) == 1 or element[0].tag != element[1].tag:
-                    self.append(XmlDictConfig(element))
-                # treat like list
-                elif element[0].tag == element[1].tag:
-                    self.append(XmlListConfig(element))
-            elif element.text:
-                text = element.text.strip()
-                if text:
-                    self.append(text)

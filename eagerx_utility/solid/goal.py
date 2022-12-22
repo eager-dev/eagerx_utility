@@ -84,6 +84,7 @@ except ImportError:
     print("eagerx_pybullet not installed, skipping pybullet engine.")
 
 try:
+    from eagerx_reality.engine import RealEngine
 
     @register.engine(RealEngine, entity=Goal)
     def real_engine(spec: ObjectSpec, graph: EngineGraph):

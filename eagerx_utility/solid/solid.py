@@ -65,9 +65,9 @@ class Solid(Object):
 
 
 try:
-    from eagerx_pybullet import PyBulletEngine
+    from eagerx_pybullet.engine import PybulletEngine
 
-    @register.engine(PybulletEngine)
+    @register.engine(PybulletEngine, entity=Solid)
     def pybullet_engine(spec: ObjectSpec, graph: EngineGraph):
         """Engine-specific implementation (Pybullet) of the object."""
         # Set object arguments (as registered per register.engine_params(..) above the engine.add_object(...) method.
@@ -126,9 +126,9 @@ except ImportError:
     print("eagerx_pybullet not installed, skipping PybulletEngine")
 
 try:
-    from eagerx_reality import RealEngine
+    from eagerx_reality.engine import RealEngine
 
-    @register.engine(RealEngine)
+    @register.engine(RealEngine, entity=Solid)
     def real_engine(spec: ObjectSpec, graph: EngineGraph):
         """Engine-specific implementation (Reality) of the object."""
         # Create engine_states (no agnostic states defined in this case)
