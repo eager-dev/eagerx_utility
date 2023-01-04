@@ -30,6 +30,7 @@ class SafePositionControl(eagerx.Node):
         collision: Dict = None,
         process: int = eagerx.NEW_PROCESS,
         color: str = "grey",
+        additional_search_paths: List[str] = [],
     ) -> NodeSpec:
         """
         Filters goal joint positions that cause self-collisions or are below a certain height.
@@ -46,6 +47,7 @@ class SafePositionControl(eagerx.Node):
         :param collision: A dict with the robot & workspace specification.
         :param process: {0: NEW_PROCESS, 1: ENVIRONMENT, 2: ENGINE, 3: EXTERNAL}
         :param color: console color of logged messages. {'black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'grey'}
+        :param additional_search_paths: Additional search paths for loading the workspace.
         :return: Node specification.
         """
         spec = cls.get_specification()
@@ -65,6 +67,7 @@ class SafePositionControl(eagerx.Node):
         spec.config.vel_limit = vel_limit
         spec.config.duration = duration if isinstance(duration, float) else 2.0 / rate
         spec.config.checks = checks
+        spec.config.additional_search_paths = additional_search_paths
 
         # Collision detector
         spec.config.collision = collision if isinstance(collision, dict) else None
@@ -95,6 +98,9 @@ class SafePositionControl(eagerx.Node):
                 self.col_id = pybullet.connect(pybullet.GUI)
             else:
                 self.col_id = pybullet.connect(pybullet.DIRECT)
+            additional_search_paths = spec.config.additional_search_paths
+            for path in additional_search_paths:
+                pybullet.setAdditionalSearchPath(path)
             # Load workspace
             bodies = load(self.collision["workspace"])(self.col_id)
             # Generate robot urdf (if not a path but a text file)
@@ -221,6 +227,7 @@ class SafeVelocityControl(eagerx.Node):
         collision: Dict = None,
         process: int = eagerx.NEW_PROCESS,
         color: str = "grey",
+        additional_search_paths: List[str] = [],
     ) -> NodeSpec:
         """
         Filters goal joint positions that cause self-collisions or are below a certain height.
@@ -237,6 +244,7 @@ class SafeVelocityControl(eagerx.Node):
         :param collision: A dict with the robot & workspace specification.
         :param process: {0: NEW_PROCESS, 1: ENVIRONMENT, 2: ENGINE, 3: EXTERNAL}
         :param color: console color of logged messages. {'black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'grey'}
+        :param additional_search_paths: Additional search paths for the robot & workspace specification.
         :return: Node specification.
         """
         spec = cls.get_specification()
@@ -256,6 +264,7 @@ class SafeVelocityControl(eagerx.Node):
         spec.config.vel_limit = vel_limit
         spec.config.duration = duration if isinstance(duration, float) else 2.0 / rate
         spec.config.checks = checks
+        spec.config.additional_search_paths = additional_search_paths
 
         # Collision detector
         spec.config.collision = collision if isinstance(collision, dict) else None
@@ -286,6 +295,8 @@ class SafeVelocityControl(eagerx.Node):
                 self.col_id = pybullet.connect(pybullet.GUI)
             else:
                 self.col_id = pybullet.connect(pybullet.DIRECT)
+            for path in spec.config.additional_search_paths:
+                pybullet.setAdditionalSearchPath(path)
             # Load workspace
             bodies = load(self.collision["workspace"])(self.col_id)
             # Generate robot urdf (if not a path but a text file)
