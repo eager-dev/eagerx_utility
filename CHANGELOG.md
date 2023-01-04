@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.0.2 (2023-01-04)
+### Fix
+* Add argument additional_search_path for safety nodes ([`7d4ed8d`](https://github.com/eager-dev/eagerx_utility/commit/7d4ed8da110ee7642986e910bd5474601495e70b))
+
 ## v0.0.1 (2022-12-22)
 ### Fix
 * Version ([`3fb7557`](https://github.com/eager-dev/eagerx_utility/commit/3fb7557b0fd5df1f9635078823af4f3d2dd68fb3))
